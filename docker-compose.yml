@@ -1,0 +1,11 @@
+services:
+  swadedsbot:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - swadedsbot-data:/var/lib/swadedsbot/.swadedsbot
+
+volumes:
+  swadedsbot-data:

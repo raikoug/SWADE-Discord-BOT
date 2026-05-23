@@ -1,0 +1,22 @@
+[Unit]
+Description=SWADE Discord Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=swadebot
+Group=swadebot
+WorkingDirectory=/opt/swadedsbot
+EnvironmentFile=/opt/swadedsbot/.env
+ExecStart=/opt/swadedsbot/swadedsbot
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=false
+ReadWritePaths=/home/swadebot/.swadedsbot /opt/swadedsbot
+
+[Install]
+WantedBy=multi-user.target
