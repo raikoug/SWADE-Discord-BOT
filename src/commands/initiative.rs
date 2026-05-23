@@ -1,6 +1,6 @@
 use crate::formatting::{
     format_enemy_draw_result, format_enemy_hold_result, format_initiative_hold,
-    format_player_initiative_draw,
+    format_player_initiative_draw, format_round_resolution,
 };
 use crate::initiative::{InitiativeError, InitiativeSession};
 use crate::{Context, Error};
@@ -217,11 +217,50 @@ pub async fn enemy_hold(
 
 #[poise::command(slash_command, check = "crate::commands::ensure_admin")]
 pub async fn round(ctx: Context<'_>) -> Result<(), Error> {
-    crate::commands::send_ephemeral_reply(
-        ctx,
-        "⚠️ `/initiative round` non è ancora disponibile in questo commit.",
-    )
-    .await
+    let guild_id = crate::commands::require_guild_id(&ctx)?;
+    let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
+        crate::commands::send_ephemeral_reply(
+            ctx,
+            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/initiative new` prima di chiudere un round.",
+        )
+        .await?;
+        return Ok(());
+    };
+
+    let resolution = match session.resolve_round() {
+        Ok(resolution) => resolution,
+        Err(err) => match err.downcast_ref::<InitiativeError>() {
+            Some(InitiativeError::NoDrawsThisRound) => {
+                crate::commands::send_ephemeral_reply(
+                    ctx,
+                    "⚠️ Nessuno ha ancora pescato in questo round.",
+                )
+                .await?;
+                return Ok(());
+            }
+            _ => return Err(err.into()),
+        },
+    };
+
+    let mut awarded_bennies = Vec::new();
+    for participant in &resolution.benny_recipients {
+        if participant.user_id == 0 {
+            continue;
+        }
+
+        let new_total = ctx
+            .data()
+            .db
+            .add_bennies(guild_id, participant.user_id, 1)?;
+        awarded_bennies.push((participant.display_name.clone(), new_total));
+    }
+
+    ctx.data()
+        .db
+        .save_active_initiative_session(guild_id, &session)?;
+    ctx.say(format_round_resolution(&resolution, &awarded_bennies))
+        .await?;
+    Ok(())
 }
 
 #[poise::command(slash_command, check = "crate::commands::ensure_admin")]

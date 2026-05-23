@@ -190,3 +190,43 @@ pub fn format_enemy_hold_result(result: &EnemyHoldResult) -> String {
 
     lines.join("\n")
 }
+
+pub fn format_round_resolution(
+    resolution: &RoundResolution,
+    awarded_bennies: &[(String, i64)],
+) -> String {
+    let mut lines = vec![format_initiative_order(resolution), String::new()];
+
+    if resolution.any_joker {
+        if resolution.player_joker {
+            lines.push(
+                "🃏 È uscito almeno un Joker pescato da un player: il mazzo verrà rimescolato per il prossimo round."
+                    .to_string(),
+            );
+
+            if awarded_bennies.is_empty() {
+                lines.push("Nessun Benny assegnato.".to_string());
+            } else {
+                lines.push("🎟️ Bennies assegnati ai partecipanti del round:".to_string());
+                for (name, total) in awarded_bennies {
+                    lines.push(format!("- **{}** ora è a **{}** Bennies", name, total));
+                }
+            }
+        } else {
+            lines.push(
+                "🃏 È uscito almeno un Joker, ma nessun player lo ha pescato: il mazzo verrà rimescolato e la party non riceve Bennies."
+                    .to_string(),
+            );
+        }
+    } else {
+        lines
+            .push("🂠 Nessun Joker in questo round: le carte pescate restano scartate.".to_string());
+    }
+
+    lines.push(format!(
+        "➡️ Il prossimo round è **{}**. Si può tornare a pescare.",
+        resolution.next_round
+    ));
+
+    lines.join("\n")
+}
