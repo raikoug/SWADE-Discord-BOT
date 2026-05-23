@@ -108,11 +108,13 @@ cargo run
 
 Esempio minimale su VPS Linux con `systemd`.
 
-1. Crea l'utente di servizio e la directory applicativa:
+1. Crea l'utente di servizio, la directory applicativa e la directory dati usata dal servizio:
 
 ```bash
 sudo useradd --system --create-home --home-dir /home/swadebot swadebot
 sudo mkdir -p /opt/swadedsbot
+sudo mkdir -p /home/swadebot/.swadedsbot
+sudo chown -R swadebot:swadebot /opt/swadedsbot /home/swadebot
 ```
 
 2. Compila il binario in release e copia i file necessari:
@@ -123,6 +125,14 @@ sudo cp target/release/swadedsbot /opt/swadedsbot/
 sudo cp .env.example /opt/swadedsbot/.env
 sudo editor /opt/swadedsbot/.env
 sudo chown -R swadebot:swadebot /opt/swadedsbot /home/swadebot
+sudo chmod 755 /opt/swadedsbot /home/swadebot /home/swadebot/.swadedsbot
+```
+
+Nel file `.env` del servizio imposta almeno:
+
+```bash
+DISCORD_TOKEN=...
+SWADEDSBOT_DATA_DIR=/home/swadebot/.swadedsbot
 ```
 
 3. Crea il file di unità `systemd` in `/etc/systemd/system/swadedsbot.service`:
@@ -159,6 +169,11 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now swadedsbot
 sudo journalctl -u swadedsbot -f
 ```
+
+Se il servizio non parte, controlla prima che esistano davvero:
+
+- `/opt/swadedsbot/swadedsbot`
+- `/home/swadebot/.swadedsbot`
 
 ## Note SWADE implementate
 
