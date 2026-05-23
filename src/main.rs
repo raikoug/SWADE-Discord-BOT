@@ -3,6 +3,7 @@ mod config;
 mod db;
 mod dice;
 mod formatting;
+mod initiative;
 
 use anyhow::Context as AnyhowContext;
 use poise::serenity_prelude as serenity;

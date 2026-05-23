@@ -1,5 +1,4 @@
 use crate::{Context, Error};
-use anyhow::anyhow;
 use poise::serenity_prelude as serenity;
 
 #[poise::command(
@@ -115,7 +114,5 @@ pub async fn reset(
 }
 
 fn require_guild_id(ctx: &Context<'_>) -> anyhow::Result<u64> {
-    ctx.guild_id()
-        .map(|id| id.get())
-        .ok_or_else(|| anyhow!("questo comando richiede un server Discord, non un DM"))
+    crate::commands::require_guild_id(ctx)
 }
