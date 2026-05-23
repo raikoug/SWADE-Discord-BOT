@@ -104,9 +104,61 @@ cargo clippy --all-targets --all-features -- -D warnings
 cargo run
 ```
 
-## Deploy minimale con systemd
+## Deploy
 
-Vedi `deploy/swadedsbot.service`.
+Esempio minimale su VPS Linux con `systemd`.
+
+1. Crea l'utente di servizio e la directory applicativa:
+
+```bash
+sudo useradd --system --create-home --home-dir /home/swadebot swadebot
+sudo mkdir -p /opt/swadedsbot
+```
+
+2. Compila il binario in release e copia i file necessari:
+
+```bash
+cargo build --release
+sudo cp target/release/swadedsbot /opt/swadedsbot/
+sudo cp .env.example /opt/swadedsbot/.env
+sudo editor /opt/swadedsbot/.env
+sudo chown -R swadebot:swadebot /opt/swadedsbot /home/swadebot
+```
+
+3. Crea il file di unità `systemd` in `/etc/systemd/system/swadedsbot.service`:
+
+```ini
+[Unit]
+Description=SWADE Discord Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=swadebot
+Group=swadebot
+WorkingDirectory=/opt/swadedsbot
+EnvironmentFile=/opt/swadedsbot/.env
+ExecStart=/opt/swadedsbot/swadedsbot
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=false
+ReadWritePaths=/home/swadebot/.swadedsbot /opt/swadedsbot
+
+[Install]
+WantedBy=multi-user.target
+```
+
+4. Ricarica `systemd`, abilita il servizio e controlla i log:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now swadedsbot
+sudo journalctl -u swadedsbot -f
+```
 
 ## Note SWADE implementate
 
