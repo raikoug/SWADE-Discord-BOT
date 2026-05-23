@@ -1,5 +1,8 @@
 /target/
 .codex/
+AGENTS.md
+CODEX_CONTEXT.md
+COMMIT_NOTES.md
 .env
 .env.*
 !.env.example
