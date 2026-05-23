@@ -1,4 +1,5 @@
 use crate::dice::{DamageRoll, TraitRoll};
+use crate::initiative::{InitiativeDraw, RoundResolution};
 
 pub fn signed(value: i32) -> String {
     if value >= 0 {
@@ -77,6 +78,48 @@ pub fn format_damage_roll(actor: &str, name: &str, roll: &DamageRoll) -> String 
             1 => lines.push("🩸 **Shaken + 1 Wound**".to_string()),
             wounds => lines.push(format!("🩸 **Shaken + {wounds} Wounds**")),
         }
+    }
+
+    lines.join("\n")
+}
+
+pub fn format_initiative_card(draw: &InitiativeDraw) -> String {
+    draw.card.label()
+}
+
+pub fn format_initiative_hold(draw: &InitiativeDraw) -> String {
+    format!(
+        "✋ **{} va in Hold**\nCarta attuale: **{}**",
+        draw.display_name,
+        format_initiative_card(draw)
+    )
+}
+
+pub fn format_player_initiative_draw(draw: &InitiativeDraw, round: u32) -> String {
+    format!(
+        "🃏 **Carta pescata**\n**{}:** {}\nRound corrente: **{}**",
+        draw.display_name,
+        format_initiative_card(draw),
+        round
+    )
+}
+
+pub fn format_initiative_order(resolution: &RoundResolution) -> String {
+    let mut lines = vec![format!(
+        "🃏 **Ordine di iniziativa - Round {}**",
+        resolution.round
+    )];
+    lines.push(String::new());
+
+    for (index, draw) in resolution.ordered_draws.iter().enumerate() {
+        let hold_suffix = if draw.on_hold { " _(Hold)_" } else { "" };
+        lines.push(format!(
+            "{}. **{}** - {}{}",
+            index + 1,
+            draw.display_name,
+            format_initiative_card(draw),
+            hold_suffix
+        ));
     }
 
     lines.join("\n")
