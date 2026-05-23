@@ -1,4 +1,7 @@
-use crate::formatting::{format_initiative_hold, format_player_initiative_draw};
+use crate::formatting::{
+    format_enemy_draw_result, format_enemy_hold_result, format_initiative_hold,
+    format_player_initiative_draw,
+};
 use crate::initiative::{InitiativeError, InitiativeSession};
 use crate::{Context, Error};
 
@@ -120,12 +123,55 @@ pub async fn hold(ctx: Context<'_>) -> Result<(), Error> {
     rename = "draw",
     check = "crate::commands::ensure_admin"
 )]
-pub async fn enemy_draw(ctx: Context<'_>) -> Result<(), Error> {
-    crate::commands::send_ephemeral_reply(
-        ctx,
-        "⚠️ `/initiative enemy draw` non è ancora disponibile in questo commit.",
-    )
-    .await
+pub async fn enemy_draw(
+    ctx: Context<'_>,
+    #[description = "Nomi separati da ;"] names: String,
+) -> Result<(), Error> {
+    let guild_id = crate::commands::require_guild_id(&ctx)?;
+    let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
+        crate::commands::send_ephemeral_reply(
+            ctx,
+            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/initiative new` prima di pescare per i nemici.",
+        )
+        .await?;
+        return Ok(());
+    };
+
+    let result = match session.draw_enemies(&names) {
+        Ok(result) => result,
+        Err(err) => match err.downcast_ref::<InitiativeError>() {
+            Some(InitiativeError::NoValidEnemyNames) => {
+                crate::commands::send_ephemeral_reply(
+                    ctx,
+                    "⚠️ Devi indicare almeno un nome valido. Separa i nomi con `;`.",
+                )
+                .await?;
+                return Ok(());
+            }
+            Some(InitiativeError::NotEnoughCards {
+                requested,
+                remaining,
+            }) => {
+                crate::commands::send_ephemeral_reply(
+                    ctx,
+                    &format!(
+                        "⚠️ Il mazzo non ha abbastanza carte disponibili: richieste {}, rimaste {}.",
+                        requested, remaining
+                    ),
+                )
+                .await?;
+                return Ok(());
+            }
+            _ => return Err(err.into()),
+        },
+    };
+
+    ctx.data()
+        .db
+        .save_active_initiative_session(guild_id, &session)?;
+    ctx.say(format_enemy_draw_result(&result, session.round))
+        .await?;
+    Ok(())
 }
 
 #[poise::command(
@@ -133,12 +179,40 @@ pub async fn enemy_draw(ctx: Context<'_>) -> Result<(), Error> {
     rename = "hold",
     check = "crate::commands::ensure_admin"
 )]
-pub async fn enemy_hold(ctx: Context<'_>) -> Result<(), Error> {
-    crate::commands::send_ephemeral_reply(
-        ctx,
-        "⚠️ `/initiative enemy hold` non è ancora disponibile in questo commit.",
-    )
-    .await
+pub async fn enemy_hold(
+    ctx: Context<'_>,
+    #[description = "Nomi separati da ;"] names: String,
+) -> Result<(), Error> {
+    let guild_id = crate::commands::require_guild_id(&ctx)?;
+    let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
+        crate::commands::send_ephemeral_reply(
+            ctx,
+            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/initiative new` prima di usare `enemy hold`.",
+        )
+        .await?;
+        return Ok(());
+    };
+
+    let result = match session.hold_enemies(&names) {
+        Ok(result) => result,
+        Err(err) => match err.downcast_ref::<InitiativeError>() {
+            Some(InitiativeError::NoValidEnemyNames) => {
+                crate::commands::send_ephemeral_reply(
+                    ctx,
+                    "⚠️ Devi indicare almeno un nome valido. Separa i nomi con `;`.",
+                )
+                .await?;
+                return Ok(());
+            }
+            _ => return Err(err.into()),
+        },
+    };
+
+    ctx.data()
+        .db
+        .save_active_initiative_session(guild_id, &session)?;
+    ctx.say(format_enemy_hold_result(&result)).await?;
+    Ok(())
 }
 
 #[poise::command(slash_command, check = "crate::commands::ensure_admin")]

@@ -1,5 +1,5 @@
 use crate::dice::{DamageRoll, TraitRoll};
-use crate::initiative::{InitiativeDraw, RoundResolution};
+use crate::initiative::{EnemyDrawResult, EnemyHoldResult, InitiativeDraw, RoundResolution};
 
 pub fn signed(value: i32) -> String {
     if value >= 0 {
@@ -119,6 +119,72 @@ pub fn format_initiative_order(resolution: &RoundResolution) -> String {
             draw.display_name,
             format_initiative_card(draw),
             hold_suffix
+        ));
+    }
+
+    lines.join("\n")
+}
+
+pub fn format_enemy_draw_result(result: &EnemyDrawResult, round: u32) -> String {
+    let mut lines = vec![format!(
+        "👹 **Carte nemici pescate**\nRound corrente: **{}**",
+        round
+    )];
+    lines.push(String::new());
+
+    if result.drawn.is_empty() {
+        lines.push("Nessun nemico valido ha pescato una carta.".to_string());
+    } else {
+        for draw in &result.drawn {
+            lines.push(format!(
+                "- **{}**: {}",
+                draw.display_name,
+                format_initiative_card(draw)
+            ));
+        }
+    }
+
+    if !result.skipped_existing.is_empty() {
+        lines.push(String::new());
+        lines.push(format!(
+            "Già presenti in questo round: {}.",
+            result.skipped_existing.join(", ")
+        ));
+    }
+
+    if !result.skipped_duplicates.is_empty() {
+        lines.push(format!(
+            "Duplicati nello stesso comando: {}.",
+            result.skipped_duplicates.join(", ")
+        ));
+    }
+
+    lines.join("\n")
+}
+
+pub fn format_enemy_hold_result(result: &EnemyHoldResult) -> String {
+    let mut lines = vec!["✋ **Nemici in Hold aggiornati**".to_string()];
+
+    if !result.held.is_empty() {
+        lines.push(String::new());
+        lines.push("Messi in Hold:".to_string());
+        for draw in &result.held {
+            lines.push(format!("- **{}**", draw.display_name));
+        }
+    }
+
+    if !result.missing.is_empty() {
+        lines.push(String::new());
+        lines.push(format!(
+            "Non trovati nel round corrente, possibile refuso: {}.",
+            result.missing.join(", ")
+        ));
+    }
+
+    if !result.duplicate_names.is_empty() {
+        lines.push(format!(
+            "Nomi duplicati nello stesso comando: {}.",
+            result.duplicate_names.join(", ")
         ));
     }
 
