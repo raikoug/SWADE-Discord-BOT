@@ -36,10 +36,16 @@ Danno. Es: `/damage dice:2d6 toughness:7 name:Sword`
 `/initiative end` `admin`
 
 **Note**
-`TN` default `4`
+`TN` = Target Number, il valore da raggiungere o superare
+`TN` base di solito `4`
 `mod` = modificatore
 `ap` = armor piercing
 `hold` richiede una draw prima
+`Wild Die` = d6 extra dei PG/Wild Card
+`Raise` = 1 ogni `4` punti pieni sopra il bersaglio
+Formula trait: `miglior dado + mod`
+Formula raises: `floor((totale - bersaglio) / 4)`, solo se `totale >= bersaglio`
+`Critical Failure` = doppio `1` su Trait Die + Wild Die
 Joker player: +1 Benny solo a chi ha pescato nel round
 "#,
         ctx.data().allowed_channel_name
