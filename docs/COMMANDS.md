@@ -97,3 +97,97 @@ Disponibile solo ad admin o utenti con permessi `Manage Server`.
 ## `/help`
 
 Risposta ephemeral/personale in italiano.
+
+## `/initiative`
+
+L'iniziativa usa carte da poker, non dadi.
+
+### Flusso consigliato
+
+```text
+/initiative new
+/initiative draw
+/initiative hold
+/initiative enemy draw names:"Goblin 1; Goblin 2; Troll"
+/initiative enemy hold names:"Goblin 1; Troll"
+/initiative round
+/initiative end
+```
+
+### `/initiative new`
+
+Comando admin-only.
+
+- avvia una sessione attiva
+- parte da round 1
+- prepara un mazzo da poker completo con 2 Jokers
+- se una sessione è già attiva, chiede di usare prima `/initiative end`
+
+### `/initiative draw`
+
+Comando player.
+
+- pesca una carta per l'utente Discord nel round corrente
+- impedisce una seconda draw nello stesso round
+- usa il display name Discord nell'output
+
+### `/initiative hold`
+
+Comando player.
+
+- funziona solo se il player ha già pescato nel round corrente
+- marca la draw attuale come Hold
+- non crea una nuova draw
+
+### `/initiative enemy draw`
+
+Comando admin-only.
+
+```text
+/initiative enemy draw names:string
+```
+
+Regole:
+
+- `names` è una stringa singola con nomi separati da `;`
+- gli spazi interni ai nomi sono preservati
+- i nomi vuoti sono ignorati
+- se non resta nessun nome valido, il comando viene rifiutato
+- i nomi già presenti nel round vengono saltati e riportati
+- i duplicati nello stesso comando vengono riportati
+
+### `/initiative enemy hold`
+
+Comando admin-only.
+
+```text
+/initiative enemy hold names:string
+```
+
+Regole:
+
+- `names` usa lo stesso parsing separato da `;`
+- il comportamento è stretto
+- mette in Hold solo nemici già presenti nel round corrente
+- i nomi mancanti vengono riportati come possibile refuso
+- non crea nemici mancanti
+- non usa fuzzy match
+
+### `/initiative round`
+
+Comando admin-only.
+
+- richiede almeno una draw nel round corrente
+- ordina per SWADE: Joker, poi A, K, Q, J, 10..2
+- a parità di rango ordina per seme: ♠, ♥, ♦, ♣
+- evidenzia le draw in Hold
+- se compare qualunque Joker, il mazzo viene rimescolato dopo il round
+- se non compare Joker, le carte pescate restano scartate
+- se almeno un player pesca un Joker, +1 Benny solo ai player che hanno pescato nel round corrente
+
+### `/initiative end`
+
+Comando admin-only.
+
+- termina la sessione attiva
+- chiude il combattimento corrente senza richiedere cleanup manuale

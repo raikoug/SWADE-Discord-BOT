@@ -384,7 +384,7 @@ impl InitiativeSession {
 
         let cards = self.draw_next_card(unique_names.len())?;
         let mut drawn = Vec::new();
-        for (name, card) in unique_names.into_iter().zip(cards.into_iter()) {
+        for (name, card) in unique_names.into_iter().zip(cards) {
             let draw = InitiativeDraw {
                 kind: ParticipantKind::Enemy,
                 participant_id: name.clone(),

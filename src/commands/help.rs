@@ -62,6 +62,36 @@ Comando riservato ad admin con permessi Administrator o Manage Server.
 Esempio:
 `/benny reset amount:3`
 
+## `/initiative new`
+Avvia una nuova sessione di iniziativa a carte.
+Comando riservato ad admin con permessi Administrator o Manage Server.
+
+## `/initiative draw`
+Ogni player pesca la propria carta per il round corrente.
+
+## `/initiative hold`
+Mette il player in Hold, ma solo dopo una draw valida nel round.
+
+## `/initiative enemy draw`
+Fa pescare una carta a uno o più nemici indicati in `names`, separati da `;`.
+Comando riservato ad admin con permessi Administrator o Manage Server.
+
+Esempio:
+`/initiative enemy draw names:Goblin 1; Goblin 2; Troll`
+
+## `/initiative enemy hold`
+Mette in Hold i nemici già presenti nel round corrente.
+Se un nome non esiste, viene segnalato come possibile refuso.
+Comando riservato ad admin con permessi Administrator o Manage Server.
+
+## `/initiative round`
+Chiude il round, stampa l'ordine di iniziativa, gestisce i Jokers e apre il round successivo.
+Comando riservato ad admin con permessi Administrator o Manage Server.
+
+## `/initiative end`
+Termina la sessione di iniziativa attiva.
+Comando riservato ad admin con permessi Administrator o Manage Server.
+
 ## Sigle rapide
 - **TN**: Target Number. Default 4.
 - **Mod**: modificatore situazionale.

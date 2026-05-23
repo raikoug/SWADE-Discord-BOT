@@ -22,6 +22,13 @@ Obiettivo MVP:
 /benny spend user:@user amount:int=1 reason:string
 /benny list
 /benny reset amount:int=3
+/initiative new
+/initiative draw
+/initiative hold
+/initiative enemy draw names:string
+/initiative enemy hold names:string
+/initiative round
+/initiative end
 /help
 ```
 
@@ -34,6 +41,20 @@ Permessi Bennies:
 - `/benny spend`: solo admin o utenti con `Manage Server`;
 - `/benny reset`: solo admin o utenti con `Manage Server`;
 - `/benny list`: disponibile a tutti.
+
+Flusso iniziativa:
+
+- admin: `/initiative new`
+- player: `/initiative draw`
+- player: `/initiative hold` opzionale, ma solo dopo una draw
+- admin: `/initiative enemy draw names:"Goblin 1; Goblin 2; Troll"`
+- admin: `/initiative enemy hold names:"Goblin 1; Troll"`
+- admin: `/initiative round`
+- admin: `/initiative end`
+
+L'iniziativa usa carte da poker, non dadi. I nomi enemy sono separati da `;`.
+`/initiative enemy hold` è stretto: non crea nomi mancanti e li segnala come possibile refuso.
+Qualsiasi Joker rimescola il mazzo dopo la risoluzione del round. Se un player pesca almeno un Joker, il bot assegna +1 Benny solo ai player che hanno pescato nel round corrente.
 
 ## Requisiti
 

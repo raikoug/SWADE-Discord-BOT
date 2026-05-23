@@ -62,3 +62,36 @@ damage >= effective_toughness + 8  => Shaken + 2 Wounds
 ```
 
 Nota: il bot non traccia ancora se il bersaglio fosse già Shaken.
+
+## Initiative
+
+L'iniziativa usa un mazzo da poker standard con:
+
+- 52 carte regolari
+- 2 Jokers
+
+Ordine SWADE:
+
+```text
+Joker
+Ace
+King
+Queen
+Jack
+10..2
+```
+
+Ordine semi a parità:
+
+```text
+Spades > Hearts > Diamonds > Clubs
+```
+
+Effetti MVP:
+
+- i player pescano con `/initiative draw`
+- possono andare in Hold con `/initiative hold` solo dopo aver pescato
+- gli enemy usano `/initiative enemy draw` e `/initiative enemy hold`
+- se compare qualunque Joker, il mazzo viene rimescolato dopo `/initiative round`
+- se non compare Joker, le carte del round restano scartate
+- se almeno un player pesca un Joker, il bot assegna +1 Benny solo ai player che hanno pescato in quel round
