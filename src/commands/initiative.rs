@@ -1,5 +1,5 @@
 use crate::formatting::{
-    format_enemy_draw_result, format_enemy_hold_result, format_initiative_hold,
+    comment_line, format_enemy_draw_result, format_enemy_hold_result, format_initiative_hold,
     format_player_initiative_draw, format_round_resolution,
 };
 use crate::initiative::{InitiativeError, InitiativeSession};
@@ -20,7 +20,10 @@ pub async fn enemy(_ctx: Context<'_>) -> Result<(), Error> {
 }
 
 #[poise::command(slash_command, rename = "new", check = "crate::commands::ensure_admin")]
-pub async fn new_session(ctx: Context<'_>) -> Result<(), Error> {
+pub async fn new_session(
+    ctx: Context<'_>,
+    #[description = "Commento opzionale"] comment: Option<String>,
+) -> Result<(), Error> {
     let guild_id = crate::commands::require_guild_id(&ctx)?;
 
     if ctx
@@ -40,16 +43,23 @@ pub async fn new_session(ctx: Context<'_>) -> Result<(), Error> {
     ctx.data()
         .db
         .save_active_initiative_session(guild_id, &session)?;
+    let comment_suffix = comment_line(comment.as_deref());
 
     ctx.say(
-        "🃏 **Iniziativa avviata**\nRound corrente: **1**\nIl mazzo da poker è stato preparato con 54 carte, inclusi i Jokers.",
+        format!(
+            "🃏 **Iniziativa avviata**\nRound corrente: **1**\nIl mazzo da poker è stato preparato con 54 carte, inclusi i Jokers.{}",
+            comment_suffix
+        ),
     )
     .await?;
     Ok(())
 }
 
 #[poise::command(slash_command)]
-pub async fn draw(ctx: Context<'_>) -> Result<(), Error> {
+pub async fn draw(
+    ctx: Context<'_>,
+    #[description = "Commento opzionale"] comment: Option<String>,
+) -> Result<(), Error> {
     let guild_id = crate::commands::require_guild_id(&ctx)?;
     let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
         crate::commands::send_ephemeral_reply(
@@ -79,13 +89,21 @@ pub async fn draw(ctx: Context<'_>) -> Result<(), Error> {
     ctx.data()
         .db
         .save_active_initiative_session(guild_id, &session)?;
-    ctx.say(format_player_initiative_draw(&draw, session.round))
-        .await?;
+    let comment_suffix = comment_line(comment.as_deref());
+    ctx.say(format!(
+        "{}{}",
+        format_player_initiative_draw(&draw, session.round),
+        comment_suffix
+    ))
+    .await?;
     Ok(())
 }
 
 #[poise::command(slash_command)]
-pub async fn hold(ctx: Context<'_>) -> Result<(), Error> {
+pub async fn hold(
+    ctx: Context<'_>,
+    #[description = "Commento opzionale"] comment: Option<String>,
+) -> Result<(), Error> {
     let guild_id = crate::commands::require_guild_id(&ctx)?;
     let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
         crate::commands::send_ephemeral_reply(
@@ -114,7 +132,13 @@ pub async fn hold(ctx: Context<'_>) -> Result<(), Error> {
     ctx.data()
         .db
         .save_active_initiative_session(guild_id, &session)?;
-    ctx.say(format_initiative_hold(&draw)).await?;
+    let comment_suffix = comment_line(comment.as_deref());
+    ctx.say(format!(
+        "{}{}",
+        format_initiative_hold(&draw),
+        comment_suffix
+    ))
+    .await?;
     Ok(())
 }
 
@@ -126,6 +150,7 @@ pub async fn hold(ctx: Context<'_>) -> Result<(), Error> {
 pub async fn enemy_draw(
     ctx: Context<'_>,
     #[description = "Nomi separati da ;"] names: String,
+    #[description = "Commento opzionale"] comment: Option<String>,
 ) -> Result<(), Error> {
     let guild_id = crate::commands::require_guild_id(&ctx)?;
     let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
@@ -169,8 +194,13 @@ pub async fn enemy_draw(
     ctx.data()
         .db
         .save_active_initiative_session(guild_id, &session)?;
-    ctx.say(format_enemy_draw_result(&result, session.round))
-        .await?;
+    let comment_suffix = comment_line(comment.as_deref());
+    ctx.say(format!(
+        "{}{}",
+        format_enemy_draw_result(&result, session.round),
+        comment_suffix
+    ))
+    .await?;
     Ok(())
 }
 
@@ -182,6 +212,7 @@ pub async fn enemy_draw(
 pub async fn enemy_hold(
     ctx: Context<'_>,
     #[description = "Nomi separati da ;"] names: String,
+    #[description = "Commento opzionale"] comment: Option<String>,
 ) -> Result<(), Error> {
     let guild_id = crate::commands::require_guild_id(&ctx)?;
     let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
@@ -211,12 +242,21 @@ pub async fn enemy_hold(
     ctx.data()
         .db
         .save_active_initiative_session(guild_id, &session)?;
-    ctx.say(format_enemy_hold_result(&result)).await?;
+    let comment_suffix = comment_line(comment.as_deref());
+    ctx.say(format!(
+        "{}{}",
+        format_enemy_hold_result(&result),
+        comment_suffix
+    ))
+    .await?;
     Ok(())
 }
 
 #[poise::command(slash_command, check = "crate::commands::ensure_admin")]
-pub async fn round(ctx: Context<'_>) -> Result<(), Error> {
+pub async fn round(
+    ctx: Context<'_>,
+    #[description = "Commento opzionale"] comment: Option<String>,
+) -> Result<(), Error> {
     let guild_id = crate::commands::require_guild_id(&ctx)?;
     let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
         crate::commands::send_ephemeral_reply(
@@ -258,20 +298,35 @@ pub async fn round(ctx: Context<'_>) -> Result<(), Error> {
     ctx.data()
         .db
         .save_active_initiative_session(guild_id, &session)?;
-    ctx.say(format_round_resolution(&resolution, &awarded_bennies))
-        .await?;
+    let comment_suffix = comment_line(comment.as_deref());
+    ctx.say(format!(
+        "{}{}",
+        format_round_resolution(&resolution, &awarded_bennies),
+        comment_suffix
+    ))
+    .await?;
     Ok(())
 }
 
 #[poise::command(slash_command, check = "crate::commands::ensure_admin")]
-pub async fn end(ctx: Context<'_>) -> Result<(), Error> {
+pub async fn end(
+    ctx: Context<'_>,
+    #[description = "Commento opzionale"] comment: Option<String>,
+) -> Result<(), Error> {
     let guild_id = crate::commands::require_guild_id(&ctx)?;
+    let comment_suffix = comment_line(comment.as_deref());
     if ctx.data().db.end_initiative_session(guild_id)? {
-        ctx.say("🛑 **Iniziativa terminata**\nLa sessione di combattimento attiva è stata chiusa.")
-            .await?;
+        ctx.say(format!(
+            "🛑 **Iniziativa terminata**\nLa sessione di combattimento attiva è stata chiusa.{}",
+            comment_suffix
+        ))
+        .await?;
     } else {
-        ctx.say("ℹ️ Non c'è nessuna sessione di iniziativa attiva da chiudere.")
-            .await?;
+        ctx.say(format!(
+            "ℹ️ Non c'è nessuna sessione di iniziativa attiva da chiudere.{}",
+            comment_suffix
+        ))
+        .await?;
     }
 
     Ok(())
