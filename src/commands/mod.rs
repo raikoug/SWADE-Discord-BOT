@@ -12,7 +12,7 @@ pub fn all() -> Vec<poise::Command<Data, Error>> {
         rolls::damage(),
         benny::benny(),
         initiative::initiative(),
-        help::help_cmd(),
+        help::swade(),
     ]
 }
 

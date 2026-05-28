@@ -4,17 +4,18 @@
 
 - Comandi e sigle in inglese.
 - Output in italiano.
-- `/help` sempre ephemeral/personale.
+- `/swade help` sempre ephemeral/personale.
 - Il bot esegue i comandi solo nel canale `#swade-bot` per default.
 - In DM o fuori canale consentito il comando viene rifiutato con risposta ephemeral.
 - I dati persistenti del bot restano sotto `~/.swadedsbot/` salvo override di configurazione.
+- I comandi operativi possono accettare un `comment` opzionale riportato nell'output.
 
 ## `/trait`
 
 Per PG e Wild Cards.
 
 ```text
-/trait die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
+/trait die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string comment:string
 ```
 
 Regole:
@@ -33,7 +34,7 @@ Regole:
 Per Extras.
 
 ```text
-/extra die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
+/extra die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string comment:string
 ```
 
 Regole:
@@ -45,7 +46,7 @@ Regole:
 ## `/damage`
 
 ```text
-/damage dice:string toughness:int mod:int=0 ap:int=0 name:string
+/damage dice:string toughness:int mod:int=0 ap:int=0 name:string comment:string
 ```
 
 Esempi `dice`:
@@ -82,19 +83,23 @@ Disponibile solo ad admin o utenti con permessi `Manage Server`.
 
 ## `/benny list`
 
+```text
+/benny list comment:string
+```
+
 Mostra Bennies tracciati nel server.
 Disponibile a tutti gli utenti del server.
 
 ## `/benny reset`
 
 ```text
-/benny reset amount:int=3
+/benny reset amount:int=3 comment:string
 ```
 
 Aggiorna solo player già tracciati.
 Disponibile solo ad admin o utenti con permessi `Manage Server`.
 
-## `/help`
+## `/swade help`
 
 Risposta ephemeral/personale in italiano.
 
@@ -118,6 +123,10 @@ L'iniziativa usa carte da poker, non dadi.
 
 Comando admin-only.
 
+```text
+/initiative new comment:string
+```
+
 - avvia una sessione attiva
 - parte da round 1
 - prepara un mazzo da poker completo con 2 Jokers
@@ -127,6 +136,10 @@ Comando admin-only.
 
 Comando player.
 
+```text
+/initiative draw comment:string
+```
+
 - pesca una carta per l'utente Discord nel round corrente
 - impedisce una seconda draw nello stesso round
 - usa il display name Discord nell'output
@@ -134,6 +147,10 @@ Comando player.
 ### `/initiative hold`
 
 Comando player.
+
+```text
+/initiative hold comment:string
+```
 
 - funziona solo se il player ha già pescato nel round corrente
 - marca la draw attuale come Hold
@@ -144,7 +161,7 @@ Comando player.
 Comando admin-only.
 
 ```text
-/initiative enemy draw names:string
+/initiative enemy draw names:string comment:string
 ```
 
 Regole:
@@ -161,7 +178,7 @@ Regole:
 Comando admin-only.
 
 ```text
-/initiative enemy hold names:string
+/initiative enemy hold names:string comment:string
 ```
 
 Regole:
@@ -177,6 +194,10 @@ Regole:
 
 Comando admin-only.
 
+```text
+/initiative round comment:string
+```
+
 - richiede almeno una draw nel round corrente
 - ordina per SWADE: Joker, poi A, K, Q, J, 10..2
 - a parità di rango ordina per seme: ♠, ♥, ♦, ♣
@@ -188,6 +209,10 @@ Comando admin-only.
 ### `/initiative end`
 
 Comando admin-only.
+
+```text
+/initiative end comment:string
+```
 
 - termina la sessione attiva
 - chiude il combattimento corrente senza richiedere cleanup manuale

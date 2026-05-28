@@ -2,38 +2,46 @@ use crate::{Context, Error};
 
 #[poise::command(
     slash_command,
-    rename = "help",
+    subcommands("help_cmd"),
     check = "crate::commands::ensure_allowed_channel"
 )]
+pub async fn swade(_ctx: Context<'_>) -> Result<(), Error> {
+    Ok(())
+}
+
+#[poise::command(slash_command, rename = "help")]
 pub async fn help_cmd(ctx: Context<'_>) -> Result<(), Error> {
     let content = format!(
         r#"**SWADE Discord Bot**
 Solo nel canale `#{}`.
 
+`/swade help`
+Aiuto rapido.
+
 **Tiri**
-`/trait die:dX mod:int tn:int name:text`
+`/trait die:dX mod:int tn:int name:text comment:text`
 PG/Wild Card. Es: `/trait die:d8 name:Spellcasting`
 
-`/extra die:dX mod:int tn:int name:text`
+`/extra die:dX mod:int tn:int name:text comment:text`
 Extra. Es: `/extra die:d6 name:Goblin Fighting`
 
-`/damage dice:XdY toughness:int mod:int ap:int name:text`
+`/damage dice:XdY toughness:int mod:int ap:int name:text comment:text`
 Danno. Es: `/damage dice:2d6 toughness:7 name:Sword`
 
 **Bennies**
-`/benny list`
+`/benny list comment:text`
 `/benny give user:@user amount:int reason:text` `admin`
 `/benny spend user:@user amount:int reason:text` `admin`
-`/benny reset amount:int` `admin`
+`/benny reset amount:int comment:text` `admin`
 
 **Initiative**
-`/initiative new` `admin`
-`/initiative draw`
-`/initiative hold`
-`/initiative enemy draw names:"Goblin 1; Troll"` `admin`
-`/initiative enemy hold names:"Goblin 1; Troll"` `admin`
-`/initiative round` `admin`
-`/initiative end` `admin`
+`/initiative new comment:text` `admin`
+`/initiative draw comment:text`
+`/initiative hold comment:text`
+`/initiative enemy draw names:"Goblin 1; Troll" comment:text` `admin`
+`/initiative enemy hold names:"Goblin 1; Troll" comment:text` `admin`
+`/initiative round comment:text` `admin`
+`/initiative end comment:text` `admin`
 
 **Note**
 `TN` = Target Number, il valore da raggiungere o superare
