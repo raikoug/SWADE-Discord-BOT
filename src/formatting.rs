@@ -9,14 +9,6 @@ pub fn signed(value: i32) -> String {
     }
 }
 
-pub fn comment_line(comment: Option<&str>) -> String {
-    comment
-        .map(str::trim)
-        .filter(|value| !value.is_empty())
-        .map(|value| format!("\n**Commento:** {value}"))
-        .unwrap_or_default()
-}
-
 pub fn format_trait_roll(actor: &str, roll_name: &str, roll: &TraitRoll) -> String {
     let mut lines = vec![format!("🎲 **{actor} tira {roll_name}**"), String::new()];
 
@@ -237,23 +229,4 @@ pub fn format_round_resolution(
     ));
 
     lines.join("\n")
-}
-
-#[cfg(test)]
-mod tests {
-    use super::comment_line;
-
-    #[test]
-    fn formats_comment_line_when_present() {
-        assert_eq!(
-            comment_line(Some("Nota rapida")),
-            "\n**Commento:** Nota rapida"
-        );
-    }
-
-    #[test]
-    fn ignores_empty_comment_line() {
-        assert!(comment_line(Some("   ")).is_empty());
-        assert!(comment_line(None).is_empty());
-    }
 }

@@ -8,14 +8,13 @@
 - Il bot esegue i comandi solo nel canale `#swade-bot` per default.
 - In DM o fuori canale consentito il comando viene rifiutato con risposta ephemeral.
 - I dati persistenti del bot restano sotto `~/.swadedsbot/` salvo override di configurazione.
-- I comandi operativi possono accettare un `comment` opzionale riportato nell'output.
 
 ## `/swade trait`
 
 Per PG e Wild Cards.
 
 ```text
-/swade trait die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string comment:string
+/swade trait die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
 ```
 
 Regole:
@@ -34,7 +33,7 @@ Regole:
 Per Extras.
 
 ```text
-/swade extra die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string comment:string
+/swade extra die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
 ```
 
 Regole:
@@ -46,7 +45,7 @@ Regole:
 ## `/swade damage`
 
 ```text
-/swade damage dice:string toughness:int mod:int=0 ap:int=0 name:string comment:string
+/swade damage dice:string toughness:int mod:int=0 ap:int=0 name:string
 ```
 
 Esempi `dice`:
@@ -84,7 +83,7 @@ Disponibile solo ad admin o utenti con permessi `Manage Server`.
 ## `/swade benny list`
 
 ```text
-/swade benny list comment:string
+/swade benny list
 ```
 
 Mostra Bennies tracciati nel server.
@@ -93,7 +92,7 @@ Disponibile a tutti gli utenti del server.
 ## `/swade benny reset`
 
 ```text
-/swade benny reset amount:int=3 comment:string
+/swade benny reset amount:int=3
 ```
 
 Aggiorna solo player già tracciati.
@@ -124,7 +123,7 @@ L'iniziativa usa carte da poker, non dadi.
 Comando admin-only.
 
 ```text
-/swade initiative new comment:string
+/swade initiative new
 ```
 
 - avvia una sessione attiva
@@ -137,7 +136,7 @@ Comando admin-only.
 Comando player.
 
 ```text
-/swade initiative draw comment:string
+/swade initiative draw
 ```
 
 - pesca una carta per l'utente Discord nel round corrente
@@ -149,7 +148,7 @@ Comando player.
 Comando player.
 
 ```text
-/swade initiative hold comment:string
+/swade initiative hold
 ```
 
 - funziona solo se il player ha già pescato nel round corrente
@@ -161,7 +160,7 @@ Comando player.
 Comando admin-only.
 
 ```text
-/swade initiative enemy-draw names:string comment:string
+/swade initiative enemy-draw names:string
 ```
 
 Regole:
@@ -178,7 +177,7 @@ Regole:
 Comando admin-only.
 
 ```text
-/swade initiative enemy-hold names:string comment:string
+/swade initiative enemy-hold names:string
 ```
 
 Regole:
@@ -195,7 +194,7 @@ Regole:
 Comando admin-only.
 
 ```text
-/swade initiative round comment:string
+/swade initiative round
 ```
 
 - richiede almeno una draw nel round corrente
@@ -211,7 +210,7 @@ Comando admin-only.
 Comando admin-only.
 
 ```text
-/swade initiative end comment:string
+/swade initiative end
 ```
 
 - termina la sessione attiva

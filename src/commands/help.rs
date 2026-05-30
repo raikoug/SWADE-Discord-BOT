@@ -1,5 +1,6 @@
 use crate::{Context, Error};
 
+/// Comandi SWADE del bot.
 #[poise::command(
     slash_command,
     subcommands(
@@ -16,6 +17,7 @@ pub async fn swade(_ctx: Context<'_>) -> Result<(), Error> {
     Ok(())
 }
 
+/// Mostra il riepilogo rapido dei comandi.
 #[poise::command(slash_command, rename = "help")]
 pub async fn help_cmd(ctx: Context<'_>) -> Result<(), Error> {
     let content = format!(
@@ -26,29 +28,29 @@ Solo nel canale `#{}`.
 Aiuto rapido.
 
 **Tiri**
-`/swade trait die:dX mod:int tn:int name:text comment:text`
+`/swade trait die:dX mod:int tn:int name:text`
 PG/Wild Card. Es: `/swade trait die:d8 name:Spellcasting`
 
-`/swade extra die:dX mod:int tn:int name:text comment:text`
+`/swade extra die:dX mod:int tn:int name:text`
 Extra. Es: `/swade extra die:d6 name:Goblin Fighting`
 
-`/swade damage dice:XdY toughness:int mod:int ap:int name:text comment:text`
+`/swade damage dice:XdY toughness:int mod:int ap:int name:text`
 Danno. Es: `/swade damage dice:2d6 toughness:7 name:Sword`
 
 **Bennies**
-`/swade benny list comment:text`
+`/swade benny list`
 `/swade benny give user:@user amount:int reason:text` `admin`
 `/swade benny spend user:@user amount:int reason:text` `admin`
-`/swade benny reset amount:int comment:text` `admin`
+`/swade benny reset amount:int` `admin`
 
 **Initiative**
-`/swade initiative new comment:text` `admin`
-`/swade initiative draw comment:text`
-`/swade initiative hold comment:text`
-`/swade initiative enemy-draw names:"Goblin 1; Troll" comment:text` `admin`
-`/swade initiative enemy-hold names:"Goblin 1; Troll" comment:text` `admin`
-`/swade initiative round comment:text` `admin`
-`/swade initiative end comment:text` `admin`
+`/swade initiative new` `admin`
+`/swade initiative draw`
+`/swade initiative hold`
+`/swade initiative enemy-draw names:"Goblin 1; Troll"` `admin`
+`/swade initiative enemy-hold names:"Goblin 1; Troll"` `admin`
+`/swade initiative round` `admin`
+`/swade initiative end` `admin`
 
 **Note**
 `TN` = Target Number, il valore da raggiungere o superare

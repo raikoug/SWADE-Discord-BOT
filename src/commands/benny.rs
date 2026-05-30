@@ -1,6 +1,7 @@
 use crate::{Context, Error};
 use poise::serenity_prelude as serenity;
 
+/// Gestione Bennies del server.
 #[poise::command(
     slash_command,
     subcommands("give", "spend", "list", "reset"),
@@ -10,6 +11,7 @@ pub async fn benny(_ctx: Context<'_>) -> Result<(), Error> {
     Ok(())
 }
 
+/// Assegna Bennies a un player.
 #[poise::command(
     slash_command,
     rename = "give",
@@ -39,6 +41,7 @@ pub async fn give(
     Ok(())
 }
 
+/// Scala Bennies da un player.
 #[poise::command(
     slash_command,
     rename = "spend",
@@ -71,20 +74,16 @@ pub async fn spend(
     Ok(())
 }
 
+/// Mostra i Bennies tracciati nel server.
 #[poise::command(slash_command, rename = "list")]
-pub async fn list(
-    ctx: Context<'_>,
-    #[description = "Commento opzionale"] comment: Option<String>,
-) -> Result<(), Error> {
+pub async fn list(ctx: Context<'_>) -> Result<(), Error> {
     let guild_id = require_guild_id(&ctx)?;
     let rows = ctx.data().db.list_bennies(guild_id)?;
-    let comment_line = crate::formatting::comment_line(comment.as_deref());
 
     if rows.is_empty() {
-        ctx.say(format!(
-            "🎟️ **Bennies**\nNessun player tracciato. Usa `/swade benny give` per aggiungerne uno.{}",
-            comment_line
-        ))
+        ctx.say(
+            "🎟️ **Bennies**\nNessun player tracciato. Usa `/swade benny give` per aggiungerne uno.",
+        )
         .await?;
         return Ok(());
     }
@@ -93,14 +92,12 @@ pub async fn list(
     for row in rows {
         lines.push(format!("<@{}>: {}", row.user_id, row.amount));
     }
-    if !comment_line.is_empty() {
-        lines.push(comment_line);
-    }
 
     ctx.say(lines.join("\n")).await?;
     Ok(())
 }
 
+/// Reimposta i Bennies dei player tracciati.
 #[poise::command(
     slash_command,
     rename = "reset",
@@ -109,16 +106,14 @@ pub async fn list(
 pub async fn reset(
     ctx: Context<'_>,
     #[description = "Valore a inizio sessione, default 3"] amount: Option<i64>,
-    #[description = "Commento opzionale"] comment: Option<String>,
 ) -> Result<(), Error> {
     let guild_id = require_guild_id(&ctx)?;
     let amount = amount.unwrap_or(3);
     let changed = ctx.data().db.reset_bennies(guild_id, amount)?;
-    let comment_line = crate::formatting::comment_line(comment.as_deref());
 
     ctx.say(format!(
-        "🔄 **Bennies resettati**\nPlayer aggiornati: {}\nNuovo valore: {}{}",
-        changed, amount, comment_line
+        "🔄 **Bennies resettati**\nPlayer aggiornati: {}\nNuovo valore: {}",
+        changed, amount
     ))
     .await?;
 

@@ -34,7 +34,6 @@ Obiettivo MVP:
 
 `/swade help` risponde in modo personale/ephemeral, quindi non sporca il canale.
 Il bot esegue i comandi solo nel canale `#swade-bot` oppure nel nome configurato tramite `SWADEDSBOT_ALLOWED_CHANNEL`.
-I comandi operativi supportano anche `comment` opzionale, che viene riportato nel messaggio Discord.
 
 Permessi Bennies:
 
