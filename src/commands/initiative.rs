@@ -33,7 +33,7 @@ pub async fn new_session(
         .is_some()
     {
         ctx.say(
-            "⚠️ C'è già una sessione di iniziativa attiva. Usa `/initiative end` prima di iniziarne una nuova.",
+            "⚠️ C'è già una sessione di iniziativa attiva. Usa `/swade initiative end` prima di iniziarne una nuova.",
         )
         .await?;
         return Ok(());
@@ -64,7 +64,7 @@ pub async fn draw(
     let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
         crate::commands::send_ephemeral_reply(
             ctx,
-            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/initiative new` prima di pescare.",
+            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/swade initiative new` prima di pescare.",
         )
         .await?;
         return Ok(());
@@ -108,7 +108,7 @@ pub async fn hold(
     let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
         crate::commands::send_ephemeral_reply(
             ctx,
-            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/initiative new` prima di usare Hold.",
+            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/swade initiative new` prima di usare Hold.",
         )
         .await?;
         return Ok(());
@@ -156,7 +156,7 @@ pub async fn enemy_draw(
     let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
         crate::commands::send_ephemeral_reply(
             ctx,
-            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/initiative new` prima di pescare per i nemici.",
+            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/swade initiative new` prima di pescare per i nemici.",
         )
         .await?;
         return Ok(());
@@ -218,7 +218,7 @@ pub async fn enemy_hold(
     let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
         crate::commands::send_ephemeral_reply(
             ctx,
-            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/initiative new` prima di usare `enemy hold`.",
+            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/swade initiative new` prima di usare `enemy hold`.",
         )
         .await?;
         return Ok(());
@@ -261,7 +261,7 @@ pub async fn round(
     let Some(mut session) = ctx.data().db.get_active_initiative_session(guild_id)? else {
         crate::commands::send_ephemeral_reply(
             ctx,
-            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/initiative new` prima di chiudere un round.",
+            "⚠️ Non c'è una sessione di iniziativa attiva. Usa `/swade initiative new` prima di chiudere un round.",
         )
         .await?;
         return Ok(());

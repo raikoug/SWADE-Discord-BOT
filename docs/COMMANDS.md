@@ -10,12 +10,12 @@
 - I dati persistenti del bot restano sotto `~/.swadedsbot/` salvo override di configurazione.
 - I comandi operativi possono accettare un `comment` opzionale riportato nell'output.
 
-## `/trait`
+## `/swade trait`
 
 Per PG e Wild Cards.
 
 ```text
-/trait die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string comment:string
+/swade trait die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string comment:string
 ```
 
 Regole:
@@ -29,12 +29,12 @@ Regole:
 - calcola Raises;
 - doppio 1 = Critical Failure.
 
-## `/extra`
+## `/swade extra`
 
 Per Extras.
 
 ```text
-/extra die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string comment:string
+/swade extra die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string comment:string
 ```
 
 Regole:
@@ -43,10 +43,10 @@ Regole:
 - il dado esplode;
 - niente Wild Die.
 
-## `/damage`
+## `/swade damage`
 
 ```text
-/damage dice:string toughness:int mod:int=0 ap:int=0 name:string comment:string
+/swade damage dice:string toughness:int mod:int=0 ap:int=0 name:string comment:string
 ```
 
 Esempi `dice`:
@@ -64,36 +64,36 @@ Regole MVP:
 - danno finale almeno Toughness effettiva = Shaken;
 - ogni Raise sopra Toughness effettiva = Wound.
 
-## `/benny give`
+## `/swade benny give`
 
 ```text
-/benny give user:@user amount:int=1 reason:string
+/swade benny give user:@user amount:int=1 reason:string
 ```
 
 Disponibile solo ad admin o utenti con permessi `Manage Server`.
 
-## `/benny spend`
+## `/swade benny spend`
 
 ```text
-/benny spend user:@user amount:int=1 reason:string
+/swade benny spend user:@user amount:int=1 reason:string
 ```
 
 Non permette di andare sotto zero.
 Disponibile solo ad admin o utenti con permessi `Manage Server`.
 
-## `/benny list`
+## `/swade benny list`
 
 ```text
-/benny list comment:string
+/swade benny list comment:string
 ```
 
 Mostra Bennies tracciati nel server.
 Disponibile a tutti gli utenti del server.
 
-## `/benny reset`
+## `/swade benny reset`
 
 ```text
-/benny reset amount:int=3 comment:string
+/swade benny reset amount:int=3 comment:string
 ```
 
 Aggiorna solo player già tracciati.
@@ -103,65 +103,65 @@ Disponibile solo ad admin o utenti con permessi `Manage Server`.
 
 Risposta ephemeral/personale in italiano.
 
-## `/initiative`
+## `/swade initiative`
 
 L'iniziativa usa carte da poker, non dadi.
 
 ### Flusso consigliato
 
 ```text
-/initiative new
-/initiative draw
-/initiative hold
-/initiative enemy draw names:"Goblin 1; Goblin 2; Troll"
-/initiative enemy hold names:"Goblin 1; Troll"
-/initiative round
-/initiative end
+/swade initiative new
+/swade initiative draw
+/swade initiative hold
+/swade initiative enemy draw names:"Goblin 1; Goblin 2; Troll"
+/swade initiative enemy hold names:"Goblin 1; Troll"
+/swade initiative round
+/swade initiative end
 ```
 
-### `/initiative new`
+### `/swade initiative new`
 
 Comando admin-only.
 
 ```text
-/initiative new comment:string
+/swade initiative new comment:string
 ```
 
 - avvia una sessione attiva
 - parte da round 1
 - prepara un mazzo da poker completo con 2 Jokers
-- se una sessione è già attiva, chiede di usare prima `/initiative end`
+- se una sessione è già attiva, chiede di usare prima `/swade initiative end`
 
-### `/initiative draw`
+### `/swade initiative draw`
 
 Comando player.
 
 ```text
-/initiative draw comment:string
+/swade initiative draw comment:string
 ```
 
 - pesca una carta per l'utente Discord nel round corrente
 - impedisce una seconda draw nello stesso round
 - usa il display name Discord nell'output
 
-### `/initiative hold`
+### `/swade initiative hold`
 
 Comando player.
 
 ```text
-/initiative hold comment:string
+/swade initiative hold comment:string
 ```
 
 - funziona solo se il player ha già pescato nel round corrente
 - marca la draw attuale come Hold
 - non crea una nuova draw
 
-### `/initiative enemy draw`
+### `/swade initiative enemy draw`
 
 Comando admin-only.
 
 ```text
-/initiative enemy draw names:string comment:string
+/swade initiative enemy draw names:string comment:string
 ```
 
 Regole:
@@ -173,12 +173,12 @@ Regole:
 - i nomi già presenti nel round vengono saltati e riportati
 - i duplicati nello stesso comando vengono riportati
 
-### `/initiative enemy hold`
+### `/swade initiative enemy hold`
 
 Comando admin-only.
 
 ```text
-/initiative enemy hold names:string comment:string
+/swade initiative enemy hold names:string comment:string
 ```
 
 Regole:
@@ -190,12 +190,12 @@ Regole:
 - non crea nemici mancanti
 - non usa fuzzy match
 
-### `/initiative round`
+### `/swade initiative round`
 
 Comando admin-only.
 
 ```text
-/initiative round comment:string
+/swade initiative round comment:string
 ```
 
 - richiede almeno una draw nel round corrente
@@ -206,12 +206,12 @@ Comando admin-only.
 - se non compare Joker, le carte pescate restano scartate
 - se almeno un player pesca un Joker, +1 Benny solo ai player che hanno pescato nel round corrente
 
-### `/initiative end`
+### `/swade initiative end`
 
 Comando admin-only.
 
 ```text
-/initiative end comment:string
+/swade initiative end comment:string
 ```
 
 - termina la sessione attiva

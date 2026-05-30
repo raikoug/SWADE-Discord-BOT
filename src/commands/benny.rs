@@ -82,7 +82,7 @@ pub async fn list(
 
     if rows.is_empty() {
         ctx.say(format!(
-            "🎟️ **Bennies**\nNessun player tracciato. Usa `/benny give` per aggiungerne uno.{}",
+            "🎟️ **Bennies**\nNessun player tracciato. Usa `/swade benny give` per aggiungerne uno.{}",
             comment_line
         ))
         .await?;

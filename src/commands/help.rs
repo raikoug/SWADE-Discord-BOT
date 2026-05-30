@@ -2,7 +2,14 @@ use crate::{Context, Error};
 
 #[poise::command(
     slash_command,
-    subcommands("help_cmd"),
+    subcommands(
+        "crate::commands::rolls::trait_roll",
+        "crate::commands::rolls::extra",
+        "crate::commands::rolls::damage",
+        "crate::commands::benny::benny",
+        "crate::commands::initiative::initiative",
+        "help_cmd"
+    ),
     check = "crate::commands::ensure_allowed_channel"
 )]
 pub async fn swade(_ctx: Context<'_>) -> Result<(), Error> {
@@ -19,29 +26,29 @@ Solo nel canale `#{}`.
 Aiuto rapido.
 
 **Tiri**
-`/trait die:dX mod:int tn:int name:text comment:text`
-PG/Wild Card. Es: `/trait die:d8 name:Spellcasting`
+`/swade trait die:dX mod:int tn:int name:text comment:text`
+PG/Wild Card. Es: `/swade trait die:d8 name:Spellcasting`
 
-`/extra die:dX mod:int tn:int name:text comment:text`
-Extra. Es: `/extra die:d6 name:Goblin Fighting`
+`/swade extra die:dX mod:int tn:int name:text comment:text`
+Extra. Es: `/swade extra die:d6 name:Goblin Fighting`
 
-`/damage dice:XdY toughness:int mod:int ap:int name:text comment:text`
-Danno. Es: `/damage dice:2d6 toughness:7 name:Sword`
+`/swade damage dice:XdY toughness:int mod:int ap:int name:text comment:text`
+Danno. Es: `/swade damage dice:2d6 toughness:7 name:Sword`
 
 **Bennies**
-`/benny list comment:text`
-`/benny give user:@user amount:int reason:text` `admin`
-`/benny spend user:@user amount:int reason:text` `admin`
-`/benny reset amount:int comment:text` `admin`
+`/swade benny list comment:text`
+`/swade benny give user:@user amount:int reason:text` `admin`
+`/swade benny spend user:@user amount:int reason:text` `admin`
+`/swade benny reset amount:int comment:text` `admin`
 
 **Initiative**
-`/initiative new comment:text` `admin`
-`/initiative draw comment:text`
-`/initiative hold comment:text`
-`/initiative enemy draw names:"Goblin 1; Troll" comment:text` `admin`
-`/initiative enemy hold names:"Goblin 1; Troll" comment:text` `admin`
-`/initiative round comment:text` `admin`
-`/initiative end comment:text` `admin`
+`/swade initiative new comment:text` `admin`
+`/swade initiative draw comment:text`
+`/swade initiative hold comment:text`
+`/swade initiative enemy draw names:"Goblin 1; Troll" comment:text` `admin`
+`/swade initiative enemy hold names:"Goblin 1; Troll" comment:text` `admin`
+`/swade initiative round comment:text` `admin`
+`/swade initiative end comment:text` `admin`
 
 **Note**
 `TN` = Target Number, il valore da raggiungere o superare

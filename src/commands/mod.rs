@@ -6,14 +6,7 @@ pub mod rolls;
 use crate::{Data, Error};
 
 pub fn all() -> Vec<poise::Command<Data, Error>> {
-    vec![
-        rolls::trait_roll(),
-        rolls::extra(),
-        rolls::damage(),
-        benny::benny(),
-        initiative::initiative(),
-        help::swade(),
-    ]
+    vec![help::swade()]
 }
 
 pub async fn ensure_allowed_channel(ctx: crate::Context<'_>) -> Result<bool, Error> {

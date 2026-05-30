@@ -15,20 +15,20 @@ Obiettivo MVP:
 ## Comandi inclusi
 
 ```text
-/trait die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
-/extra die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
-/damage dice:string toughness:int mod:int=0 ap:int=0 name:string
-/benny give user:@user amount:int=1 reason:string
-/benny spend user:@user amount:int=1 reason:string
-/benny list
-/benny reset amount:int=3
-/initiative new
-/initiative draw
-/initiative hold
-/initiative enemy draw names:string
-/initiative enemy hold names:string
-/initiative round
-/initiative end
+/swade trait die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
+/swade extra die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
+/swade damage dice:string toughness:int mod:int=0 ap:int=0 name:string
+/swade benny give user:@user amount:int=1 reason:string
+/swade benny spend user:@user amount:int=1 reason:string
+/swade benny list
+/swade benny reset amount:int=3
+/swade initiative new
+/swade initiative draw
+/swade initiative hold
+/swade initiative enemy draw names:string
+/swade initiative enemy hold names:string
+/swade initiative round
+/swade initiative end
 /swade help
 ```
 
@@ -38,23 +38,23 @@ I comandi operativi supportano anche `comment` opzionale, che viene riportato ne
 
 Permessi Bennies:
 
-- `/benny give`: solo admin o utenti con `Manage Server`;
-- `/benny spend`: solo admin o utenti con `Manage Server`;
-- `/benny reset`: solo admin o utenti con `Manage Server`;
-- `/benny list`: disponibile a tutti.
+- `/swade benny give`: solo admin o utenti con `Manage Server`;
+- `/swade benny spend`: solo admin o utenti con `Manage Server`;
+- `/swade benny reset`: solo admin o utenti con `Manage Server`;
+- `/swade benny list`: disponibile a tutti.
 
 Flusso iniziativa:
 
-- admin: `/initiative new`
-- player: `/initiative draw`
-- player: `/initiative hold` opzionale, ma solo dopo una draw
-- admin: `/initiative enemy draw names:"Goblin 1; Goblin 2; Troll"`
-- admin: `/initiative enemy hold names:"Goblin 1; Troll"`
-- admin: `/initiative round`
-- admin: `/initiative end`
+- admin: `/swade initiative new`
+- player: `/swade initiative draw`
+- player: `/swade initiative hold` opzionale, ma solo dopo una draw
+- admin: `/swade initiative enemy draw names:"Goblin 1; Goblin 2; Troll"`
+- admin: `/swade initiative enemy hold names:"Goblin 1; Troll"`
+- admin: `/swade initiative round`
+- admin: `/swade initiative end`
 
 L'iniziativa usa carte da poker, non dadi. I nomi enemy sono separati da `;`.
-`/initiative enemy hold` è stretto: non crea nomi mancanti e li segnala come possibile refuso.
+`/swade initiative enemy hold` è stretto: non crea nomi mancanti e li segnala come possibile refuso.
 Qualsiasi Joker rimescola il mazzo dopo la risoluzione del round. Se un player pesca almeno un Joker, il bot assegna +1 Benny solo ai player che hanno pescato nel round corrente.
 
 ## Requisiti
@@ -190,7 +190,6 @@ Se il servizio non parte, controlla prima che esistano davvero:
 
 - Schede personaggio persistenti.
 - Power Points.
-- Iniziativa con carte.
 - Stati Shaken/Wounds persistenti.
 - Bottoni per reroll/spesa Benny.
 

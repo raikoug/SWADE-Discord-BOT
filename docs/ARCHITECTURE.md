@@ -27,10 +27,10 @@ src/commands/*
 | `src/formatting.rs` | messaggi in italiano |
 | `src/db.rs` | SQLite, Bennies, roll history |
 | `src/commands/mod.rs` | registry comandi e guard riusabili per canale/permessi |
-| `src/commands/rolls.rs` | `/trait`, `/extra`, `/damage` |
-| `src/commands/benny.rs` | `/benny ...`, con mutazioni limitate agli admin |
-| `src/commands/initiative.rs` | `/initiative ...`, lifecycle, player flow, enemy flow, round resolution |
-| `src/commands/help.rs` | `/help` ephemeral |
+| `src/commands/rolls.rs` | `/swade trait`, `/swade extra`, `/swade damage` |
+| `src/commands/benny.rs` | `/swade benny ...`, con mutazioni limitate agli admin |
+| `src/commands/initiative.rs` | `/swade initiative ...`, lifecycle, player flow, enemy flow, round resolution |
+| `src/commands/help.rs` | `/swade help` ephemeral |
 
 ## Principio guida
 
