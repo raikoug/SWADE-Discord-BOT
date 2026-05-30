@@ -25,8 +25,8 @@ Obiettivo MVP:
 /swade initiative new
 /swade initiative draw
 /swade initiative hold
-/swade initiative enemy draw names:string
-/swade initiative enemy hold names:string
+/swade initiative enemy-draw names:string
+/swade initiative enemy-hold names:string
 /swade initiative round
 /swade initiative end
 /swade help
@@ -48,13 +48,13 @@ Flusso iniziativa:
 - admin: `/swade initiative new`
 - player: `/swade initiative draw`
 - player: `/swade initiative hold` opzionale, ma solo dopo una draw
-- admin: `/swade initiative enemy draw names:"Goblin 1; Goblin 2; Troll"`
-- admin: `/swade initiative enemy hold names:"Goblin 1; Troll"`
+- admin: `/swade initiative enemy-draw names:"Goblin 1; Goblin 2; Troll"`
+- admin: `/swade initiative enemy-hold names:"Goblin 1; Troll"`
 - admin: `/swade initiative round`
 - admin: `/swade initiative end`
 
 L'iniziativa usa carte da poker, non dadi. I nomi enemy sono separati da `;`.
-`/swade initiative enemy hold` è stretto: non crea nomi mancanti e li segnala come possibile refuso.
+`/swade initiative enemy-hold` è stretto: non crea nomi mancanti e li segnala come possibile refuso.
 Qualsiasi Joker rimescola il mazzo dopo la risoluzione del round. Se un player pesca almeno un Joker, il bot assegna +1 Benny solo ai player che hanno pescato nel round corrente.
 
 ## Requisiti

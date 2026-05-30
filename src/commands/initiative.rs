@@ -7,15 +7,18 @@ use crate::{Context, Error};
 
 #[poise::command(
     slash_command,
-    subcommands("new_session", "draw", "hold", "enemy", "round", "end"),
+    subcommands(
+        "new_session",
+        "draw",
+        "hold",
+        "enemy_draw",
+        "enemy_hold",
+        "round",
+        "end"
+    ),
     check = "crate::commands::ensure_allowed_channel"
 )]
 pub async fn initiative(_ctx: Context<'_>) -> Result<(), Error> {
-    Ok(())
-}
-
-#[poise::command(slash_command, subcommands("enemy_draw", "enemy_hold"))]
-pub async fn enemy(_ctx: Context<'_>) -> Result<(), Error> {
     Ok(())
 }
 
@@ -144,7 +147,7 @@ pub async fn hold(
 
 #[poise::command(
     slash_command,
-    rename = "draw",
+    rename = "enemy-draw",
     check = "crate::commands::ensure_admin"
 )]
 pub async fn enemy_draw(
@@ -206,7 +209,7 @@ pub async fn enemy_draw(
 
 #[poise::command(
     slash_command,
-    rename = "hold",
+    rename = "enemy-hold",
     check = "crate::commands::ensure_admin"
 )]
 pub async fn enemy_hold(

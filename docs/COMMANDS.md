@@ -113,8 +113,8 @@ L'iniziativa usa carte da poker, non dadi.
 /swade initiative new
 /swade initiative draw
 /swade initiative hold
-/swade initiative enemy draw names:"Goblin 1; Goblin 2; Troll"
-/swade initiative enemy hold names:"Goblin 1; Troll"
+/swade initiative enemy-draw names:"Goblin 1; Goblin 2; Troll"
+/swade initiative enemy-hold names:"Goblin 1; Troll"
 /swade initiative round
 /swade initiative end
 ```
@@ -156,12 +156,12 @@ Comando player.
 - marca la draw attuale come Hold
 - non crea una nuova draw
 
-### `/swade initiative enemy draw`
+### `/swade initiative enemy-draw`
 
 Comando admin-only.
 
 ```text
-/swade initiative enemy draw names:string comment:string
+/swade initiative enemy-draw names:string comment:string
 ```
 
 Regole:
@@ -173,12 +173,12 @@ Regole:
 - i nomi già presenti nel round vengono saltati e riportati
 - i duplicati nello stesso comando vengono riportati
 
-### `/swade initiative enemy hold`
+### `/swade initiative enemy-hold`
 
 Comando admin-only.
 
 ```text
-/swade initiative enemy hold names:string comment:string
+/swade initiative enemy-hold names:string comment:string
 ```
 
 Regole:

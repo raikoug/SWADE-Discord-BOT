@@ -91,7 +91,7 @@ Effetti MVP:
 
 - i player pescano con `/swade initiative draw`
 - possono andare in Hold con `/swade initiative hold` solo dopo aver pescato
-- gli enemy usano `/swade initiative enemy draw` e `/swade initiative enemy hold`
+- gli enemy usano `/swade initiative enemy-draw` e `/swade initiative enemy-hold`
 - se compare qualunque Joker, il mazzo viene rimescolato dopo `/swade initiative round`
 - se non compare Joker, le carte del round restano scartate
 - se almeno un player pesca un Joker, il bot assegna +1 Benny solo ai player che hanno pescato in quel round

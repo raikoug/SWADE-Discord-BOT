@@ -45,8 +45,8 @@ Danno. Es: `/swade damage dice:2d6 toughness:7 name:Sword`
 `/swade initiative new comment:text` `admin`
 `/swade initiative draw comment:text`
 `/swade initiative hold comment:text`
-`/swade initiative enemy draw names:"Goblin 1; Troll" comment:text` `admin`
-`/swade initiative enemy hold names:"Goblin 1; Troll" comment:text` `admin`
+`/swade initiative enemy-draw names:"Goblin 1; Troll" comment:text` `admin`
+`/swade initiative enemy-hold names:"Goblin 1; Troll" comment:text` `admin`
 `/swade initiative round comment:text` `admin`
 `/swade initiative end comment:text` `admin`
 
