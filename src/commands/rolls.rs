@@ -1,4 +1,4 @@
-use crate::dice::{roll_damage, roll_trait, DamageDice, Die};
+use crate::dice::{roll_damage, roll_trait, DamageDice, Die, TraitDie};
 use crate::formatting::{format_damage_roll, format_trait_roll};
 use crate::{Context, Error};
 
@@ -10,7 +10,7 @@ use crate::{Context, Error};
 )]
 pub async fn trait_roll(
     ctx: Context<'_>,
-    #[description = "Dado del Trait o della Skill"] die: Die,
+    #[description = "Dado del Trait o della Skill; d0 = unskilled"] die: TraitDie,
     #[description = "Modificatore situazionale"]
     #[rename = "mod"]
     r#mod: Option<i32>,
@@ -34,7 +34,7 @@ pub async fn trait_roll(
 #[poise::command(slash_command, check = "crate::commands::ensure_allowed_channel")]
 pub async fn extra(
     ctx: Context<'_>,
-    #[description = "Dado del Trait o della Skill"] die: Die,
+    #[description = "Dado del Trait o della Skill; d0 = unskilled"] die: TraitDie,
     #[description = "Modificatore situazionale"]
     #[rename = "mod"]
     r#mod: Option<i32>,

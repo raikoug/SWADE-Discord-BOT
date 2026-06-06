@@ -28,11 +28,11 @@ Solo nel canale `#{}`.
 Aiuto rapido.
 
 **Tiri**
-`/swade trait die:dX mod:int tn:int name:text`
-PG/Wild Card. Es: `/swade trait die:d8 name:Spellcasting`
+`/swade trait die:d0|d4|d6|d8|d10|d12 mod:int tn:int name:text`
+PG/Wild Card. `d0` = unskilled. Es: `/swade trait die:d8 name:Spellcasting`
 
-`/swade extra die:dX mod:int tn:int name:text`
-Extra. Es: `/swade extra die:d6 name:Goblin Fighting`
+`/swade extra die:d0|d4|d6|d8|d10|d12 mod:int tn:int name:text`
+Extra. `d0` = unskilled. Es: `/swade extra die:d6 name:Goblin Fighting`
 
 `/swade damage attr_die:dX weapon_die:dY toughness:int mod:int ap:int name:text`
 Danno. Es: `/swade damage attr_die:d8 weapon_die:d6 toughness:7 name:Sword`
@@ -57,6 +57,7 @@ Danno. Es: `/swade damage attr_die:d8 weapon_die:d6 toughness:7 name:Sword`
 `TN` base di solito `4`
 `mod` = modificatore
 `ap` = armor piercing
+`d0` = unskilled, usa `d4` e `-2`
 `hold` richiede una draw prima
 `Wild Die` = d6 extra dei PG/Wild Card
 `Raise` = 1 ogni `4` punti pieni sopra il bersaglio

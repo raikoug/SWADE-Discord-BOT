@@ -37,6 +37,38 @@ impl Die {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, poise::ChoiceParameter)]
+pub enum TraitDie {
+    #[name = "d0"]
+    D0,
+    #[name = "d4"]
+    D4,
+    #[name = "d6"]
+    D6,
+    #[name = "d8"]
+    D8,
+    #[name = "d10"]
+    D10,
+    #[name = "d12"]
+    D12,
+}
+
+impl TraitDie {
+    pub fn effective_die(self) -> Die {
+        match self {
+            Self::D0 | Self::D4 => Die::D4,
+            Self::D6 => Die::D6,
+            Self::D8 => Die::D8,
+            Self::D10 => Die::D10,
+            Self::D12 => Die::D12,
+        }
+    }
+
+    pub fn is_unskilled(self) -> bool {
+        matches!(self, Self::D0)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExplodingRoll {
     pub sides: u32,
@@ -69,7 +101,7 @@ impl ExplodingRoll {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TraitRoll {
-    pub trait_die: Die,
+    pub trait_die: TraitDie,
     pub trait_roll: ExplodingRoll,
     pub wild_roll: Option<ExplodingRoll>,
     pub modifier: i32,
@@ -77,6 +109,18 @@ pub struct TraitRoll {
 }
 
 impl TraitRoll {
+    pub fn effective_trait_die(&self) -> Die {
+        self.trait_die.effective_die()
+    }
+
+    pub fn unskilled_penalty(&self) -> i32 {
+        if self.trait_die.is_unskilled() {
+            -2
+        } else {
+            0
+        }
+    }
+
     pub fn best_raw(&self) -> i32 {
         let trait_total = self.trait_roll.total();
         match &self.wild_roll {
@@ -86,7 +130,7 @@ impl TraitRoll {
     }
 
     pub fn final_total(&self) -> i32 {
-        self.best_raw() + self.modifier
+        self.best_raw() + self.modifier + self.unskilled_penalty()
     }
 
     pub fn is_success(&self) -> bool {
@@ -103,7 +147,7 @@ impl TraitRoll {
     pub fn is_critical_failure(&self) -> bool {
         match &self.wild_roll {
             Some(wild) => self.trait_roll.first() == 1 && wild.first() == 1,
-            None => self.trait_roll.first() == 1,
+            None => false,
         }
     }
 }
@@ -155,9 +199,9 @@ impl DamageRoll {
     }
 }
 
-pub fn roll_trait(die: Die, wild: bool, modifier: i32, tn: i32) -> TraitRoll {
+pub fn roll_trait(die: TraitDie, wild: bool, modifier: i32, tn: i32) -> TraitRoll {
     let mut rng = rand::thread_rng();
-    let trait_roll = roll_exploding_with_rng(die.sides(), &mut rng);
+    let trait_roll = roll_exploding_with_rng(die.effective_die().sides(), &mut rng);
     let wild_roll = wild.then(|| roll_exploding_with_rng(6, &mut rng));
 
     TraitRoll {
@@ -221,7 +265,7 @@ mod tests {
     #[test]
     fn trait_roll_calculates_raises() {
         let roll = TraitRoll {
-            trait_die: Die::D8,
+            trait_die: TraitDie::D8,
             trait_roll: ExplodingRoll {
                 sides: 8,
                 rolls: vec![8, 3],
@@ -242,7 +286,7 @@ mod tests {
     #[test]
     fn critical_failure_requires_double_one_for_wild_cards() {
         let roll = TraitRoll {
-            trait_die: Die::D8,
+            trait_die: TraitDie::D8,
             trait_roll: ExplodingRoll {
                 sides: 8,
                 rolls: vec![1],
@@ -256,6 +300,44 @@ mod tests {
         };
 
         assert!(roll.is_critical_failure());
+    }
+
+    #[test]
+    fn unskilled_applies_minus_two_after_best_die() {
+        let roll = TraitRoll {
+            trait_die: TraitDie::D0,
+            trait_roll: ExplodingRoll {
+                sides: 4,
+                rolls: vec![2],
+            },
+            wild_roll: Some(ExplodingRoll {
+                sides: 6,
+                rolls: vec![6],
+            }),
+            modifier: 0,
+            tn: 4,
+        };
+
+        assert_eq!(roll.best_raw(), 6);
+        assert_eq!(roll.unskilled_penalty(), -2);
+        assert_eq!(roll.final_total(), 4);
+        assert!(roll.is_success());
+    }
+
+    #[test]
+    fn extras_do_not_critical_fail_on_single_one() {
+        let roll = TraitRoll {
+            trait_die: TraitDie::D6,
+            trait_roll: ExplodingRoll {
+                sides: 6,
+                rolls: vec![1],
+            },
+            wild_roll: None,
+            modifier: 0,
+            tn: 4,
+        };
+
+        assert!(!roll.is_critical_failure());
     }
 
     #[test]

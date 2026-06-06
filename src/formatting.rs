@@ -12,11 +12,19 @@ pub fn signed(value: i32) -> String {
 pub fn format_trait_roll(actor: &str, roll_name: &str, roll: &TraitRoll) -> String {
     let mut lines = vec![format!("🎲 **{actor} tira {roll_name}**"), String::new()];
 
-    lines.push(format!(
-        "**Trait Die {}:** {}",
-        roll.trait_die.label(),
-        roll.trait_roll.notation()
-    ));
+    if roll.trait_die.is_unskilled() {
+        lines.push(format!(
+            "**Trait Die {} (Unskilled):** {}",
+            roll.effective_trait_die().label(),
+            roll.trait_roll.notation()
+        ));
+    } else {
+        lines.push(format!(
+            "**Trait Die {}:** {}",
+            roll.effective_trait_die().label(),
+            roll.trait_roll.notation()
+        ));
+    }
 
     if let Some(wild) = &roll.wild_roll {
         lines.push(format!("**Wild Die d6:** {}", wild.notation()));
@@ -24,6 +32,9 @@ pub fn format_trait_roll(actor: &str, roll_name: &str, roll: &TraitRoll) -> Stri
     }
 
     lines.push(format!("**Mod:** {}", signed(roll.modifier)));
+    if roll.trait_die.is_unskilled() {
+        lines.push("**Unskilled:** -2".to_string());
+    }
     lines.push(format!(
         "**Risultato finale:** {} vs **TN {}**",
         roll.final_total(),

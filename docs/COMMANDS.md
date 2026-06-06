@@ -14,7 +14,7 @@
 Per PG e Wild Cards.
 
 ```text
-/swade trait die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
+/swade trait die:d0|d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
 ```
 
 Regole:
@@ -23,6 +23,7 @@ Regole:
 - tira Wild Die d6;
 - entrambi esplodono;
 - tiene il migliore;
+- `d0` indica un tiro unskilled: usa `d4` e applica `-2`;
 - applica Mod;
 - confronta con TN;
 - calcola Raises;
@@ -33,13 +34,14 @@ Regole:
 Per Extras.
 
 ```text
-/swade extra die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
+/swade extra die:d0|d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
 ```
 
 Regole:
 
 - tira solo Trait Die;
 - il dado esplode;
+- `d0` indica un tiro unskilled: usa `d4` e applica `-2`;
 - niente Wild Die.
 
 ## `/swade damage`
