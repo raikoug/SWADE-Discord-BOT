@@ -55,7 +55,11 @@ pub fn format_damage_roll(actor: &str, name: &str, roll: &DamageRoll) -> String 
         .join(", ");
 
     let mut lines = vec![format!("💥 **{actor} tira danno: {name}**"), String::new()];
-    lines.push(format!("**Dadi:** {} → {roll_parts}", roll.notation));
+    lines.push(format!(
+        "**Dadi:** {} + {} → {roll_parts}",
+        roll.dice.attr_die.label(),
+        roll.dice.weapon_die.label()
+    ));
     lines.push(format!("**Totale dadi:** {}", roll.dice_total()));
     lines.push(format!("**Mod:** {}", signed(roll.modifier)));
     lines.push(format!("**AP:** {}", roll.armor_piercing));

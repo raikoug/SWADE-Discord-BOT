@@ -1,4 +1,4 @@
-use crate::dice::{parse_damage_notation, roll_damage, roll_trait, Die};
+use crate::dice::{roll_damage, roll_trait, DamageDice, Die};
 use crate::formatting::{format_damage_roll, format_trait_roll};
 use crate::{Context, Error};
 
@@ -58,7 +58,8 @@ pub async fn extra(
 #[poise::command(slash_command, check = "crate::commands::ensure_allowed_channel")]
 pub async fn damage(
     ctx: Context<'_>,
-    #[description = "Dadi danno, esempio 2d6, 3d8, d12"] dice: String,
+    #[description = "Dado dell'attributo, esempio d8"] attr_die: Die,
+    #[description = "Dado dell'arma, esempio d6"] weapon_die: Die,
     #[description = "Toughness del bersaglio"] toughness: i32,
     #[description = "Modificatore al danno"]
     #[rename = "mod"]
@@ -69,8 +70,11 @@ pub async fn damage(
     let modifier = r#mod.unwrap_or(0);
     let armor_piercing = ap.unwrap_or(0).max(0);
     let damage_name = name.unwrap_or_else(|| "Damage".to_string());
-    let notation = parse_damage_notation(&dice)?;
-    let roll = roll_damage(notation, modifier, toughness, armor_piercing);
+    let dice = DamageDice {
+        attr_die,
+        weapon_die,
+    };
+    let roll = roll_damage(dice, modifier, toughness, armor_piercing);
     let actor = ctx.author().display_name().to_string();
 
     let message = format_damage_roll(&actor, &damage_name, &roll);

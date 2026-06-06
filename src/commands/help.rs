@@ -34,8 +34,8 @@ PG/Wild Card. Es: `/swade trait die:d8 name:Spellcasting`
 `/swade extra die:dX mod:int tn:int name:text`
 Extra. Es: `/swade extra die:d6 name:Goblin Fighting`
 
-`/swade damage dice:XdY toughness:int mod:int ap:int name:text`
-Danno. Es: `/swade damage dice:2d6 toughness:7 name:Sword`
+`/swade damage attr_die:dX weapon_die:dY toughness:int mod:int ap:int name:text`
+Danno. Es: `/swade damage attr_die:d8 weapon_die:d6 toughness:7 name:Sword`
 
 **Bennies**
 `/swade benny list`

@@ -45,14 +45,14 @@ Regole:
 ## `/swade damage`
 
 ```text
-/swade damage dice:string toughness:int mod:int=0 ap:int=0 name:string
+/swade damage attr_die:d4|d6|d8|d10|d12 weapon_die:d4|d6|d8|d10|d12 toughness:int mod:int=0 ap:int=0 name:string
 ```
 
-Esempi `dice`:
+Esempi:
 
-- `2d6`
-- `3d8`
-- `d12`
+- `attr_die:d8 weapon_die:d6`
+- `attr_die:d10 weapon_die:d8`
+- `attr_die:d12 weapon_die:d12`
 
 Regole MVP:
 

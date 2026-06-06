@@ -1,4 +1,3 @@
-use anyhow::{anyhow, Result};
 use rand::Rng;
 use std::fmt;
 
@@ -109,21 +108,21 @@ impl TraitRoll {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct DamageNotation {
-    pub count: u32,
-    pub die: Die,
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DamageDice {
+    pub attr_die: Die,
+    pub weapon_die: Die,
 }
 
-impl fmt::Display for DamageNotation {
+impl fmt::Display for DamageDice {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}{}", self.count, self.die.label())
+        write!(f, "{} + {}", self.attr_die.label(), self.weapon_die.label())
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DamageRoll {
-    pub notation: DamageNotation,
+    pub dice: DamageDice,
     pub rolls: Vec<ExplodingRoll>,
     pub modifier: i32,
     pub toughness: i32,
@@ -170,57 +169,20 @@ pub fn roll_trait(die: Die, wild: bool, modifier: i32, tn: i32) -> TraitRoll {
     }
 }
 
-pub fn parse_damage_notation(input: &str) -> Result<DamageNotation> {
-    let normalized = input.trim().to_ascii_lowercase();
-    let Some((count_part, die_part)) = normalized.split_once('d') else {
-        return Err(anyhow!("usa una notazione tipo 2d6, 3d8 o d12"));
-    };
-
-    let count = if count_part.is_empty() {
-        1
-    } else {
-        count_part
-            .parse::<u32>()
-            .map_err(|_| anyhow!("numero di dadi non valido: {count_part}"))?
-    };
-
-    if !(1..=20).contains(&count) {
-        return Err(anyhow!("il numero di dadi deve essere tra 1 e 20"));
-    }
-
-    let sides = die_part
-        .parse::<u32>()
-        .map_err(|_| anyhow!("dado non valido: d{die_part}"))?;
-
-    let die = match sides {
-        4 => Die::D4,
-        6 => Die::D6,
-        8 => Die::D8,
-        10 => Die::D10,
-        12 => Die::D12,
-        _ => {
-            return Err(anyhow!(
-                "dado non supportato: d{sides}; usa d4, d6, d8, d10 o d12"
-            ))
-        }
-    };
-
-    Ok(DamageNotation { count, die })
-}
-
 pub fn roll_damage(
-    notation: DamageNotation,
+    dice: DamageDice,
     modifier: i32,
     toughness: i32,
     armor_piercing: i32,
 ) -> DamageRoll {
     let mut rng = rand::thread_rng();
-    let rolls = (0..notation.count)
-        .map(|_| roll_exploding_with_rng(notation.die.sides(), &mut rng))
-        .collect();
+    let rolls = vec![
+        roll_exploding_with_rng(dice.attr_die.sides(), &mut rng),
+        roll_exploding_with_rng(dice.weapon_die.sides(), &mut rng),
+    ];
 
     DamageRoll {
-        notation,
+        dice,
         rolls,
         modifier,
         toughness,
@@ -247,14 +209,13 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parses_damage_notation() {
-        let parsed = parse_damage_notation("2d6").unwrap();
-        assert_eq!(parsed.count, 2);
-        assert_eq!(parsed.die, Die::D6);
+    fn damage_dice_display_lists_both_dice() {
+        let dice = DamageDice {
+            attr_die: Die::D8,
+            weapon_die: Die::D6,
+        };
 
-        let parsed = parse_damage_notation("d12").unwrap();
-        assert_eq!(parsed.count, 1);
-        assert_eq!(parsed.die, Die::D12);
+        assert_eq!(dice.to_string(), "d8 + d6");
     }
 
     #[test]
@@ -300,9 +261,9 @@ mod tests {
     #[test]
     fn damage_calculates_wounds() {
         let damage = DamageRoll {
-            notation: DamageNotation {
-                count: 2,
-                die: Die::D6,
+            dice: DamageDice {
+                attr_die: Die::D6,
+                weapon_die: Die::D6,
             },
             rolls: vec![
                 ExplodingRoll {

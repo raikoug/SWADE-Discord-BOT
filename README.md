@@ -17,7 +17,7 @@ Obiettivo MVP:
 ```text
 /swade trait die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
 /swade extra die:d4|d6|d8|d10|d12 mod:int=0 tn:int=4 name:string
-/swade damage dice:string toughness:int mod:int=0 ap:int=0 name:string
+/swade damage attr_die:d4|d6|d8|d10|d12 weapon_die:d4|d6|d8|d10|d12 toughness:int mod:int=0 ap:int=0 name:string
 /swade benny give user:@user amount:int=1 reason:string
 /swade benny spend user:@user amount:int=1 reason:string
 /swade benny list
